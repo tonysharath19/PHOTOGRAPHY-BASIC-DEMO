@@ -66,6 +66,21 @@
             --border-color: rgba(138,43,226,0.18);
         }
 
+        /* Light mode: make mobile side menu match light styling */
+:root[data-theme="light"] #mobile-nav {
+    background: rgba(255,255,255,0.98);        /* light panel */
+    box-shadow: 24px 0 45px rgba(0,0,0,0.18);  /* softer shadow in light mode */
+}
+
+:root[data-theme="light"] #mobile-nav a {
+    color: var(--secondary-color);              /* dark text */
+    border-bottom: 1px solid var(--border-color);
+}
+
+:root[data-theme="light"] #mobile-nav a:hover {
+    color: var(--primary-color);
+}
+
         :root[data-theme="light"] body {
             background: var(--background-light);
             color: var(--text-color);
@@ -119,6 +134,14 @@
             border: 1px solid var(--primary-color);
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
+
+             /* Light mode: royal indigo Book Now button in mobile nav only */
+:root[data-theme="light"] #mobile-nav a.btn-primary {
+    background-color: #4B0082; /* royal indigo */
+    color: #ffffff;            /* white text */
+    border-color: transparent;
+}   
+
         :root[data-theme="light"] .btn-primary:hover {
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: var(--light-text-color);
@@ -161,10 +184,8 @@
         :root[data-theme="light"] .portfolio-item .overlay { background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); color:#fff; }
         :root[data-theme="light"] .portfolio-item .overlay h3,
         :root[data-theme="light"] .portfolio-item .overlay p {
-        color: #fff; /* override global h3/p colors */
-        }    
-
-
+            color: #fff; /* overlay text white in light mode */
+        }
 
         :root[data-theme="light"] .service-card,
         :root[data-theme="light"] .pricing-card,
@@ -235,13 +256,20 @@
         /* Base Styles + Mobile/iOS improvements                                     */
         /* -------------------------------------------------------------------------- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+
+        html {
+            scroll-behavior: smooth;
+            max-width: 100%;
+            overflow-x: hidden; /* prevent horizontal scroll */
+        }
+
         body {
             font-family: var(--font-body);
             line-height: 1.6;
             color: var(--text-color);
             background: radial-gradient(circle at top left, #1d2333 0, #05060a 50%, #020308 100%);
-            overflow-x: hidden;
+            max-width: 100%;
+            overflow-x: hidden; /* prevent horizontal scroll */
             transition: background-color 0.4s ease, color 0.4s ease;
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
@@ -361,9 +389,10 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
             transition: all 0.3s ease;
         }
+        /* Keep header same size on scroll; only shadow could be used if scrolled, but JS removed */
         #main-header.scrolled {
-            padding-top: calc(10px + env(safe-area-inset-top));
-            padding-bottom: 10px;
+            padding-top: calc(16px + env(safe-area-inset-top));
+            padding-bottom: 16px;
             box-shadow: 0 18px 40px rgba(0,0,0,0.55);
         }
         #main-header .container {
@@ -477,6 +506,17 @@
             transition: left 0.4s ease-in-out;
             padding-top: 80px;
         }
+        
+        /* Mobile nav "Book Now" button */
+#mobile-nav a.btn-primary {
+    display: block;           /* full-width click area */
+    text-align: center;       /* center the text */
+    padding: 10px 24px;       /* proper button padding */
+    margin-top: 8px;
+    border-radius: 999px;
+    border-bottom: none;      /* remove list underline */
+}
+
         #mobile-nav.open { left: 0; }
         #mobile-nav ul { padding: 20px; }
         #mobile-nav li { margin-bottom: 14px; }
@@ -533,31 +573,18 @@
             padding: 0 16px;
         }
 
+        /* Hero content: animations removed so it's stable on all devices */
         .hero-content h1 {
             font-size: 3.8em;
             line-height: 1.1;
             margin-bottom: 20px;
             text-shadow: 0 18px 45px rgba(0,0,0,0.75);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
         }
-        .hero-content h1.aos-animate { opacity: 1; transform: translateY(0); }
         .hero-content p {
             font-size: 1.25em;
             margin-bottom: 40px;
             color: rgba(255,255,255,0.92);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease-out 0.2s, transform 1s ease-out 0.2s;
         }
-        .hero-content p.aos-animate { opacity: 1; transform: translateY(0); }
-        .hero-content .btn {
-            opacity: 0;
-            transform: translateY(20px) scale(0.98);
-            transition: opacity 1s ease-out 0.4s, transform 1s ease-out 0.4s;
-        }
-        .hero-content .btn.aos-animate { opacity: 1; transform: translateY(0) scale(1); }
 
         .scroll-down-arrow {
             position: absolute;
@@ -568,10 +595,7 @@
             color: var(--primary-color);
             animation: bounce 2s infinite;
             z-index: 2;
-            opacity: 0;
-            transition: opacity 1s ease-out 1s;
         }
-        .scroll-down-arrow.aos-animate { opacity: 1; }
 
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
@@ -664,18 +688,18 @@
         }
 
         /* When a category is selected, show full uncropped images */
-.portfolio-grid.filtered .portfolio-item img {
-    height: auto;
-    max-height: none;
-    object-fit: contain;
-}
+        .portfolio-grid.filtered .portfolio-item img {
+            height: auto;
+            max-height: none;
+            object-fit: contain;
+        }
 
-/* Mobile: override the fixed 260px height when filtered */
-@media (max-width: 768px) {
-    .portfolio-grid.filtered .portfolio-item img {
-        height: auto;
-    }
-}
+        /* Mobile: override the fixed 260px height when filtered */
+        @media (max-width: 768px) {
+            .portfolio-grid.filtered .portfolio-item img {
+                height: auto;
+            }
+        }
 
         .portfolio-item {
             position: relative;
@@ -1037,20 +1061,7 @@
             .footer-nav ul { flex-direction: column; gap: 8px; }
             .footer-logo, .footer-nav, .footer-social { width: 100%; margin-bottom: 12px; }
 
-            /* Keep hero stable on mobile – disable entrance transitions */
-            .hero-content h1,
-            .hero-content p,
-            .hero-content .btn {
-                opacity: 1;
-                transform: none;
-                transition: none;
-            }
-            .scroll-down-arrow {
-                opacity: 1;
-                transform: none;
-                transition: none;
-                animation: none;
-            }
+            /* Hero already non-animated; additional rules not required but safe */
         }
         @media (max-width: 480px) {
             h1 { font-size: 2.2em; }
@@ -1590,10 +1601,11 @@
             });
 
             /* ---------------------- Sticky Header ---------------------- */
-            const header = document.getElementById('main-header');
-            window.addEventListener('scroll', () => {
-                header.classList.toggle('scrolled', window.scrollY > 40);
-            });
+            // REMOVED: header shrink behavior to keep header fixed & stable
+            // const header = document.getElementById('main-header');
+            // window.addEventListener('scroll', () => {
+            //     header.classList.toggle('scrolled', window.scrollY > 40);
+            // });
 
             /* ---------------------- Active Nav Link on Scroll + aria-current ---------------------- */
             const sections = document.querySelectorAll('section[id]');
@@ -1613,45 +1625,44 @@
             sections.forEach(section => sectionObserver.observe(section));
 
             /* ---------------------- Portfolio Filtering (update aria-selected) ---------------------- */
-            /* ---------------------- Portfolio Filtering (update aria-selected) ---------------------- */
-const filterButtons = document.querySelectorAll('.filter-btn');
-const portfolioItems = document.querySelectorAll('.portfolio-item');
-const portfolioGrid = document.querySelector('.portfolio-grid'); // NEW
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            const portfolioGrid = document.querySelector('.portfolio-grid'); // for filtered class
 
-filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        filterButtons.forEach(btn => {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-selected', 'false');
-        });
-        button.classList.add('active');
-        button.setAttribute('aria-selected', 'true');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    button.classList.add('active');
+                    button.setAttribute('aria-selected', 'true');
 
-        const filter = button.dataset.filter;
+                    const filter = button.dataset.filter;
 
-        // Toggle "filtered" class depending on selection
-        if (filter === 'all') {
-            portfolioGrid.classList.remove('filtered');
-        } else {
-            portfolioGrid.classList.add('filtered');
-        }
+                    // Toggle "filtered" class depending on selection
+                    if (filter === 'all') {
+                        portfolioGrid.classList.remove('filtered');
+                    } else {
+                        portfolioGrid.classList.add('filtered');
+                    }
 
-        portfolioItems.forEach(item => {
-            item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            if (filter === 'all' || item.classList.contains(filter)) {
-                item.style.display = 'block';
-                setTimeout(() => {
-                    item.style.opacity = '1';
-                    item.style.transform = 'scale(1) translateY(0)';
-                }, 10);
-            } else {
-                item.style.opacity = '0';
-                item.style.transform = 'scale(0.95) translateY(10px)';
-                setTimeout(() => { item.style.display = 'none'; }, 400);
-            }
-        });
-    });
-});
+                    portfolioItems.forEach(item => {
+                        item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                        if (filter === 'all' || item.classList.contains(filter)) {
+                            item.style.display = 'block';
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1) translateY(0)';
+                            }, 10);
+                        } else {
+                            item.style.opacity = '0';
+                            item.style.transform = 'scale(0.95) translateY(10px)';
+                            setTimeout(() => { item.style.display = 'none'; }, 400);
+                        }
+                    });
+                });
+            });
 
             /* ---------------------- Testimonial Carousel (with swipe) ---------------------- */
             const testimonialCarousel = document.getElementById('testimonialCarousel');
